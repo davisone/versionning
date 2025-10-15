@@ -1,41 +1,53 @@
 // main.ts
 class Todo {
-    id: number;
-    title: string;
-    done: boolean;
+    uuid: string;
+    label: string;
+    finished: boolean;
 
-    constructor(id: number, title: string) {
-        this.id = id;
-        this.title = title;
-        this.done = false;
+    constructor(uuid: string, label: string) {
+        this.uuid = "todo-" + uuid;
+        this.label = label.toUpperCase();
+        this.finished = true; // Inversé par rapport à done=false
     }
 
     toggle() {
-        this.done = !this.done;
+        this.finished = !this.finished;
+        console.log("⚙️ Changement d’état :", this.label);
+    }
+
+    reset() {
+        this.finished = false;
+        console.log("🔄 Réinitialisé :", this.label);
     }
 }
 
 class TodoList {
-    todos: Todo[] = [];
+    items: Todo[] = [];
 
-    add(title: string) {
-        const todo = new Todo(this.todos.length + 1, title);
-        this.todos.push(todo);
+    add(label: string) {
+        const todo = new Todo(String(this.items.length + 100), "🔥 " + label);
+        this.items.unshift(todo); // ordre inversé
     }
 
     list() {
-        console.log("Liste des tâches :");
-        this.todos.forEach(t =>
-            console.log(`${t.id}. ${t.title} ${t.done ? "✅" : "❌"}`)
+        console.log("=== MES TÂCHES 🔥 ===");
+        this.items.forEach(t =>
+            console.log(`#${t.uuid} - ${t.label} ${t.finished ? "✅" : "❌"}`)
         );
+    }
+
+    clearAll() {
+        this.items = [];
+        console.log("🧹 Liste entièrement vidée !");
     }
 }
 
 // Exemple d'utilisation
-const list = new TodoList();
-list.add("Apprendre TypeScript");
-list.add("Faire un café");
-list.list();
+const todos = new TodoList();
+todos.add("Faire le ménage");
+todos.add("Apprendre TypeScript");
+todos.list();
 
-list.todos[0].toggle();
-list.list();
+todos.items[1].toggle();
+todos.clearAll();
+todos.list();
